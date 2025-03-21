@@ -31,12 +31,12 @@ public class AdminServlet extends HttpServlet {
             case "/logout":
                 doLogout(request, response);
                 break;
-            case "/admin/dashboard": // Example: Dashboard
-                HttpSession session = request.getSession(false); // Do not create if it doesn't exist.
+            case "/admin/dashboard":
+                HttpSession session = request.getSession(false);
                 if (session != null && session.getAttribute("admin") != null) {
                     request.getRequestDispatcher("/views/admin/dashboard.jsp").forward(request, response);
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/login"); // Redirect to login
+                    response.sendRedirect(request.getContextPath() + "/login");
                 }
                 break;
             default:
@@ -62,7 +62,7 @@ public class AdminServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // Basic input validation
+        //  input validation
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             request.setAttribute("error", "Username and password are required.");
             request.getRequestDispatcher("/views/login.jsp").forward(request, response);
@@ -72,26 +72,22 @@ public class AdminServlet extends HttpServlet {
         Administrateur admin = adminDao.getAdminByUsername(username);
 
         if (admin != null && password.equals(admin.getMotDePasse())) {
-            // Authentication successful
-            HttpSession session = request.getSession(); // Create a session
+            HttpSession session = request.getSession();
             session.setAttribute("admin", admin);
-
-            // Redirect to the dashboard or a welcome page
             response.sendRedirect(request.getContextPath() + "/admin/dashboard");
 
 
         } else {
-            // Authentication failed
             request.setAttribute("error", "Invalid username or password.");
             request.getRequestDispatcher("/views/login.jsp").forward(request, response);
         }
     }
 
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);  // Get existing session
+        HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate(); // Invalidate the session
+            session.invalidate();
         }
-        response.sendRedirect(request.getContextPath() + "/login"); // Redirect to login page
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 }

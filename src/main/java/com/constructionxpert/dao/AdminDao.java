@@ -26,7 +26,7 @@ public class AdminDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
         return admin;
     }
@@ -50,9 +50,7 @@ public class AdminDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle exceptions, log errors, or throw custom exceptions
         }
         return admin;
     }
-    // Add other admin-related methods (create, update, etc.) if needed
 }
