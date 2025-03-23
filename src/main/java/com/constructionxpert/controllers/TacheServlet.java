@@ -192,7 +192,8 @@ public class TacheServlet extends HttpServlet {
         tache.setProjetId(projetId);
 
         tacheDao.addTache(tache);
-        response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId);
+       // response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId);
+        response.sendRedirect(request.getContextPath() + "/taches");
     }
     private void updateTache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
