@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,419 +8,293 @@
     <title>Construction Project Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        :root {
-            --primary: #FF6B00;
-            --primary-dark: #E55400;
-            --secondary: #2A2D34;
-            --accent: #FFD100;
-            --light: #F5F5F5;
-            --medium: #DDDDDD;
-            --dark: #212529;
-            --success: #28a745;
-        }
+<style>
+    /* Main Variables */
+    :root {
+        --primary-color: #f89c1c;     /* Construction orange */
+        --secondary-color: #2c3e50;   /* Dark blue-gray */
+        --accent-color: #e74c3c;      /* Accent red */
+        --background-color: #f4f4f4;  /* Light gray background */
+        --text-color: #333;
+        --border-radius: 6px;
+        --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            overflow: hidden;
-            background-color: var(--secondary);
-            background-image:
-                    linear-gradient(30deg, var(--secondary) 12%, transparent 12.5%, transparent 87%, var(--secondary) 87.5%, var(--secondary)),
-                    linear-gradient(150deg, var(--secondary) 12%, transparent 12.5%, transparent 87%, var(--secondary) 87.5%, var(--secondary)),
-                    linear-gradient(30deg, var(--secondary) 12%, transparent 12.5%, transparent 87%, var(--secondary) 87.5%, var(--secondary)),
-                    linear-gradient(150deg, var(--secondary) 12%, transparent 12.5%, transparent 87%, var(--secondary) 87.5%, var(--secondary)),
-                    linear-gradient(60deg, rgba(42, 45, 52, 0.2) 25%, transparent 25.5%, transparent 75%, rgba(42, 45, 52, 0.2) 75%, rgba(42, 45, 52, 0.2)),
-                    linear-gradient(60deg, rgba(42, 45, 52, 0.2) 25%, transparent 25.5%, transparent 75%, rgba(42, 45, 52, 0.2) 75%, rgba(42, 45, 52, 0.2));
-            background-position: 0 0, 0 0, 10px 18px, 10px 18px, 0 0, 10px 18px;
-            background-size: 20px 36px;
-        }
+    /* General Styles */
+    body {
+        background-color: var(--background-color);
+        font-family: 'Roboto', sans-serif;
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
 
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+    .page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+        z-index: 1;
+    }
 
-        .page-wrapper {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
+    /* Login Container */
+    .login-container {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 30px;
+        width: 400px;
+        max-width: 90%;
+        position: relative;
+        overflow: hidden;
+        border-top: 4px solid var(--primary-color);
+    }
 
-        .page-wrapper::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, rgba(42, 45, 52, 0.9) 70%);
-            z-index: -1;
-        }
+    /* Header Styles */
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
+    .login-logo {
+        background-color: var(--primary-color);
+        color: white;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 20px;
+        font-size: 30px;
+    }
+
+    .login-container h2 {
+        color: var(--secondary-color);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    /* Form Elements */
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--secondary-color);
+    }
+
+    .icon-container {
+        position: absolute;
+        left: 15px;
+        top: 38px;
+        color: var(--secondary-color);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(248, 156, 28, 0.2);
+    }
+
+    /* Button Styles */
+    .btn-login {
+        background-color: var(--primary-color);
+        color: white;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .btn-login:hover {
+        background-color: #e08700;
+    }
+
+    /* Footer */
+    .footer-text {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* Alert Styles */
+    .alert {
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+    }
+
+    .alert-danger {
+        background-color: #fdecea;
+        color: var(--accent-color);
+        border-left: 4px solid var(--accent-color);
+    }
+
+    /* Construction Crane Animation */
+    .crane {
+        position: absolute;
+        bottom: -10px;
+        right: -80px;
+        z-index: -1;
+        opacity: 0.6;
+        transform: scale(0.4);
+    }
+
+    .crane-tower {
+        width: 20px;
+        height: 200px;
+        background-color: var(--secondary-color);
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .crane-arm {
+        width: 200px;
+        height: 15px;
+        background-color: var(--secondary-color);
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform-origin: 10px center;
+        animation: craneMovement 10s infinite alternate;
+    }
+
+    .crane-weight {
+        width: 30px;
+        height: 30px;
+        background-color: var(--primary-color);
+        position: absolute;
+        top: -15px;
+        left: 15px;
+    }
+
+    .crane-cable {
+        width: 2px;
+        height: 70px;
+        background-color: #999;
+        position: absolute;
+        top: 15px;
+        right: 30px;
+        animation: cableMovement 8s infinite alternate;
+    }
+
+    .crane-hook {
+        width: 15px;
+        height: 15px;
+        border: 2px solid #999;
+        border-top: none;
+        border-radius: 0 0 50% 50%;
+        position: absolute;
+        top: 85px;
+        right: 23px;
+        animation: hookMovement 8s infinite alternate;
+    }
+
+    /* Dust Animation */
+    .dust {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .dust-particle {
+        position: absolute;
+        background-color: rgba(248, 156, 28, 0.1);
+        border-radius: 50%;
+        animation: dustFloat 20s infinite linear;
+    }
+
+    /* Animations */
+    @keyframes craneMovement {
+        0% { transform: rotate(-5deg); }
+        100% { transform: rotate(5deg); }
+    }
+
+    @keyframes cableMovement {
+        0% { height: 60px; }
+        100% { height: 100px; }
+    }
+
+    @keyframes hookMovement {
+        0% { top: 75px; }
+        100% { top: 115px; }
+    }
+
+    @keyframes dustFloat {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.6;
+        }
+        90% {
+            opacity: 0.2;
+        }
+        100% {
+            transform: translateY(-1000px) rotate(720deg);
+            opacity: 0;
+        }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 480px) {
         .login-container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 450px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 1s ease-out forwards;
-            border-top: 6px solid var(--primary);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .login-header h2 {
-            color: var(--secondary);
-            font-weight: 700;
-            margin-top: 15px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .login-header h2::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 3px;
-            bottom: -8px;
-            left: 50%;
-            background-color: var(--primary);
-            transform: translateX(-50%);
-            animation: underline 1.5s ease-in-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes underline {
-            from { width: 0; }
-            to { width: 100%; }
+            padding: 20px;
         }
 
         .login-logo {
-            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2.8rem;
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.4);
-            position: relative;
-            z-index: 1;
-            animation: pulse 2s infinite;
-        }
-
-        .login-logo::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-            z-index: -1;
-            filter: blur(8px);
-            opacity: 0.7;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-
-        .form-group:nth-child(1) {
-            animation: slideIn 0.5s ease-out forwards;
-            animation-delay: 0.6s;
-        }
-
-        .form-group:nth-child(2) {
-            animation: slideIn 0.5s ease-out forwards;
-            animation-delay: 0.8s;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .form-group label {
-            font-weight: 500;
-            color: var(--secondary);
-            margin-bottom: 10px;
-            display: block;
-            transition: all 0.3s;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
         }
 
         .form-control {
-            height: 55px;
-            padding-left: 50px;
-            border: 2px solid var(--medium);
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-size: 1rem;
-            background-color: var(--light);
-            color: var(--dark);
+            padding: 10px 15px 10px 40px;
         }
 
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(255, 107, 0, 0.25);
-            background-color: white;
-        }
-
-        .form-control:focus + .icon-container {
-            color: var(--primary);
-        }
-
-        .icon-container {
-            position: absolute;
-            left: 18px;
-            top: 45px;
-            color: var(--secondary);
-            transition: all 0.3s;
-            font-size: 1.1rem;
-        }
-
-        .btn-login {
-            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-            border: none;
-            height: 55px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: white;
-            border-radius: 8px;
-            width: 100%;
-            transition: all 0.3s;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeUp 0.5s ease-out forwards;
-            animation-delay: 1s;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .btn-login:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4);
-        }
-
-        .btn-login:active {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(255, 107, 0, 0.3);
-        }
-
-        .btn-login::after {
-            content: "";
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-            background-repeat: no-repeat;
-            background-position: 50%;
-            transform: scale(10, 10);
-            opacity: 0;
-            transition: transform 0.5s, opacity 1s;
-        }
-
-        .btn-login:active::after {
-            transform: scale(0, 0);
-            opacity: 0.3;
-            transition: 0s;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 30px;
-            color: var(--secondary);
-            font-size: 0.9rem;
-            opacity: 0;
-            animation: fadeIn 0.5s ease-out forwards;
-            animation-delay: 1.2s;
-        }
-
-        .alert-danger {
-            border-left: 4px solid #dc3545;
-            background-color: rgba(220, 53, 69, 0.1);
-            padding: 15px;
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        /* Construction elements */
         .crane {
-            position: absolute;
-            bottom: -5px;
-            right: -120px;
-            width: 180px;
-            height: 320px;
-            opacity: 0.1;
-            transform-origin: bottom center;
-            animation: sway 8s ease-in-out infinite;
+            display: none;
         }
-
-        @keyframes sway {
-            0%, 100% { transform: rotate(-1deg); }
-            50% { transform: rotate(1deg); }
-        }
-
-        .crane-arm {
-            position: absolute;
-            bottom: 150px;
-            left: 20px;
-            width: 160px;
-            height: 8px;
-            background-color: var(--accent);
-            transform-origin: left center;
-            transform: rotate(-45deg);
-        }
-
-        .crane-tower {
-            position: absolute;
-            bottom: 0;
-            left: 60px;
-            width: 20px;
-            height: 250px;
-            background-color: var(--accent);
-        }
-
-        .crane-weight {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: var(--secondary);
-            border-radius: 50%;
-            top: -5px;
-            right: 10px;
-        }
-
-        .crane-cable {
-            position: absolute;
-            top: 0;
-            right: 50px;
-            width: 2px;
-            height: 60px;
-            background-color: var(--secondary);
-        }
-
-        .crane-hook {
-            position: absolute;
-            top: 60px;
-            right: 46px;
-            width: 10px;
-            height: 10px;
-            border: 2px solid var(--secondary);
-            border-top: none;
-            border-radius: 0 0 5px 5px;
-        }
-
-        /* Dust particles */
-        .dust {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            background-color: var(--primary);
-            border-radius: 50%;
-            opacity: 0;
-            animation: float 12s linear infinite;
-        }
-
-        @keyframes float {
-            0% { opacity: 0; transform: translateY(0) scale(1); }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.4; }
-            100% { opacity: 0; transform: translateY(-800px) scale(0); }
-        }
-
-        /* Generate particles programmatically in JavaScript */
-
-        /* Responsive adjustments */
-        @media (max-width: 576px) {
-            .login-container {
-                padding: 25px;
-            }
-
-            .login-logo {
-                width: 70px;
-                height: 70px;
-                font-size: 2.2rem;
-            }
-
-            .form-control {
-                height: 50px;
-            }
-
-            .btn-login {
-                height: 50px;
-            }
-
-            .crane {
-                display: none;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
+<%@ include file="./includes/header.jsp" %>
+
 <div class="dust" id="dustContainer"></div>
 
 <div class="page-wrapper">
@@ -459,7 +334,6 @@
             <p>Construction Project Management System</p>
         </div>
 
-        <!-- Construction crane decoration -->
         <div class="crane">
             <div class="crane-tower"></div>
             <div class="crane-arm">
