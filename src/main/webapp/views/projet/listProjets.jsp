@@ -409,7 +409,7 @@
                         <a href="<%=request.getContextPath()%>/projets/edit?id=<%= projet.getId() %>" class="btn-modifier">
                             Modifier
                         </a>
-                        <a href="javascript:void(0);" class="btn-supprimer"
+                        <a  class="btn-supprimer"
                            data-toggle="modal"
                            data-target="#deleteModal"
                            data-id="<%= projet.getId() %>"

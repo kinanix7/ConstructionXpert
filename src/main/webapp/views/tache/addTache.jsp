@@ -56,4 +56,14 @@
 </div>
 <%@ include file="../includes/footer.jsp" %>
 </body>
+<script>
+    function validtiondate (){
+        var dateDebut = document.getElementById("dateDebut").value;
+        var dateFin = document.getElementById("dateFin").value;
+        if (dateDebut > dateFin){
+            alert("La date de fin doit être supérieure à la date de début");
+            return false;
+        }
+    }
+</script>
 </html>

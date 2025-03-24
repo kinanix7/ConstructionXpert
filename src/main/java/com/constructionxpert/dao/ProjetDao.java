@@ -34,7 +34,7 @@ public class ProjetDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 
@@ -61,7 +61,7 @@ public class ProjetDao {
                 projets.add(projet);
             }
         }  catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
         return projets;
     }
@@ -90,7 +90,7 @@ public class ProjetDao {
                 }
             }
         }  catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
         return projet;
     }
@@ -109,7 +109,7 @@ public class ProjetDao {
             pstmt.setInt(7, projet.getId());
             pstmt.executeUpdate();
         }  catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 
@@ -121,7 +121,7 @@ public class ProjetDao {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 }

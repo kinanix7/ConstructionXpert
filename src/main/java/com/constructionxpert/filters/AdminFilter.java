@@ -26,5 +26,4 @@ public class AdminFilter implements Filter {
         }
     }
 
-    // init() and destroy() can be left empty for this simple filter
 }

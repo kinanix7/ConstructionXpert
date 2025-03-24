@@ -217,7 +217,7 @@
             display: inline-flex;
             align-items: center;
             transition: all 0.2s ease;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .btn-assign:hover {
@@ -229,6 +229,25 @@
         .btn i {
             margin-right: 5px;
         }
+        .btn-view-resources {
+            background-color: #28a745; /* Green color */
+            color: white;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 18.5px;
+        }
+
+        .btn-view-resources:hover {
+            background-color: #218838; /* Darker green on hover */
+            color: white;
+            text-decoration: none;
+        }
+
     </style>
 </head>
 <body>
@@ -248,7 +267,7 @@
     </div>
 
     <div class="row">
-        <% List<Tache> taches = (List<Tache>) request.getAttribute("taches");
+            <% List<Tache> taches = (List<Tache>) request.getAttribute("taches");
             if (taches != null && !taches.isEmpty()) {
                 for (Tache tache : taches) { %>
         <div class="col-lg-4 col-md-6 mb-4">
@@ -284,15 +303,20 @@
                 </div>
                 <div class="card-footer">
                     <div class="action-buttons">
+                        <a href="<%=request.getContextPath()%>/taches/viewAssignedResources?id=<%= tache.getId() %>" class="btn-view-resources" style="margin-right: 5px;" >
+                            <i class="fas fa-eye" ></i>
+                        </a>
                         <a href="<%=request.getContextPath()%>/taches/edit?id=<%= tache.getId() %>" class="btn-modifier">
                             Edit
                         </a>
                         <a href="<%=request.getContextPath()%>/taches/delete?id=<%= tache.getId() %>" class="btn-supprimer" onclick="return confirm('Are you sure?')">
                             Delete
                         </a>
+
                         <a href="<%=request.getContextPath()%>/taches/assignerRessource?tacheId=<%= tache.getId() %>" class="btn-assign">
                             Assign Resource
                         </a>
+
                     </div>
                 </div>
             </div>

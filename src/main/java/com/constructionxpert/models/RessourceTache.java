@@ -9,7 +9,6 @@ public class RessourceTache {
     private int quantiteUtilisee;
     private Timestamp dateAssignation;
 
-    // Constructors
     public RessourceTache() {
     }
 

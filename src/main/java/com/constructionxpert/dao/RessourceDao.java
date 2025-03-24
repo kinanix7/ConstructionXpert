@@ -38,7 +38,7 @@ public class RessourceDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 
@@ -86,7 +86,7 @@ public class RessourceDao {
                             rs.getInt("quantite"),
                             rs.getString("unite"),
                             rs.getString("description"),
-                            rs.getInt("fournisseur_id"), // Use getInt
+                            rs.getInt("fournisseur_id"),
                             rs.getTimestamp("date_creation")
                     );
                 }
@@ -143,7 +143,7 @@ public class RessourceDao {
             pstmt.setInt(2, ressourceId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Log and handle appropriately
+            e.printStackTrace();
         }
     }
 }

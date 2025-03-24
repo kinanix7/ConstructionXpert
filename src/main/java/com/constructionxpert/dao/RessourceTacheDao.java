@@ -56,7 +56,7 @@ public class RessourceTacheDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log and handle the exception
+            e.printStackTrace();
         }
         return ressourceTaches;
     }
@@ -71,7 +71,7 @@ public class RessourceTacheDao {
             pstmt.setInt(2, ressourceId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 }

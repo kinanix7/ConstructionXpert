@@ -12,7 +12,6 @@ public class Ressource {
     private Integer fournisseurId;  // Allow nulls
     private Timestamp dateCreation;
 
-    // Constructors, Getters, and Setters
     public Ressource() {}
 
     public Ressource(int id, String nom, String type, int quantite, String unite, String description, Integer fournisseurId, Timestamp dateCreation) {

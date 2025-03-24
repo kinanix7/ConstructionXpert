@@ -1,4 +1,3 @@
-
 package com.constructionxpert.controllers;
 
 import com.constructionxpert.dao.ProjetDao;
@@ -130,7 +129,7 @@ public class ProjetServlet extends HttpServlet {
         projet.setDateFin(dateFin);
         projet.setBudget(budget);
         projet.setStatut(statut);
-        projet.setAdministrateurId(adminId);  // Use the logged-in admin's ID
+        projet.setAdministrateurId(adminId);
         projetDao.addProjet(projet);
         response.sendRedirect(request.getContextPath() + "/projets");
     }

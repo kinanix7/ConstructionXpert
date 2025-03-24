@@ -121,7 +121,7 @@ public class TacheDao {
             e.printStackTrace();
         }
     }
-    public List<Tache> getAllTaches() throws SQLException { // Method to get all tasks
+    public List<Tache> getAllTaches() throws SQLException {
         List<Tache> taches = new ArrayList<>();
         String sql = "SELECT * FROM tache";
 
@@ -141,7 +141,7 @@ public class TacheDao {
                 taches.add(tache);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
         return taches;
     }

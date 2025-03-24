@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/construction_expert";
-    private static final String USER = "root";  // Replace
-    private static final String PASSWORD = ""; // Replace
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
         try {
@@ -23,7 +23,7 @@ public class DBConnection {
                 resource.close();
             } catch (Exception e) {
                 System.err.println("Error closing resource: " + e.getMessage());
-                e.printStackTrace(); // Log the exception properly
+                e.printStackTrace();
             }
         }
     }

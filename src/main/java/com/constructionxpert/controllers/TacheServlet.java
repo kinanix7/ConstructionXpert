@@ -17,15 +17,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(urlPatterns = {"/taches", "/taches/add", "/taches/edit", "/taches/delete","/taches/assignerRessource", "/taches/supprimerRessource"})
+@WebServlet(urlPatterns = {"/taches", "/taches/add", "/taches/edit", "/taches/delete","/taches/assignerRessource", "/taches/supprimerRessource", "/taches/viewAssignedResources"}) // Added new URL pattern
 public class TacheServlet extends HttpServlet {
 
     private TacheDao tacheDao;
-    private ProjetDao projetDao;  // For listing projects
-    private RessourceDao ressourceDao; // For assigning resources
+    private ProjetDao projetDao;
+    private RessourceDao ressourceDao;
     private RessourceTacheDao ressourceTacheDao;
 
     @Override
@@ -59,6 +60,9 @@ public class TacheServlet extends HttpServlet {
                     break;
                 case "/taches/supprimerRessource":
                     supprimerRessource(request,response);
+                    break;
+                case "/taches/viewAssignedResources":
+                    viewAssignedResources(request, response);
                     break;
 
                 default:
@@ -96,12 +100,11 @@ public class TacheServlet extends HttpServlet {
 
         String projetIdStr = request.getParameter("projetId");
 
-        // If a projetId is provided, list tasks for that project.  Otherwise, list all tasks.
         List<Tache> taches;
         if(projetIdStr != null && !projetIdStr.trim().isEmpty()){
             int projetId = Integer.parseInt(projetIdStr);
             taches = tacheDao.getAllTachesByProjectId(projetId);
-            request.setAttribute("projetId", projetId); // Pass projetId to JSP
+            request.setAttribute("projetId", projetId);
 
         } else {
             taches = tacheDao.getAllTaches();
@@ -121,31 +124,11 @@ public class TacheServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Tache tache = tacheDao.getTacheById(id);
 
-        if (tache == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Tache not found");
-            return;
-        }
-
-        List<Projet> projets = projetDao.getAllProjets(); // For the project dropdown
+        List<Projet> projets = projetDao.getAllProjets();
         request.setAttribute("projets", projets);
         request.setAttribute("tache", tache);
 
         List<RessourceTache> ressourceTaches = ressourceTacheDao.getAllRessourceTachesByTacheId(id);
-        List<Integer> assignedResourceIds = ressourceTaches.stream()
-                .map(RessourceTache::getRessourceId)
-                .collect(Collectors.toList());
-
-        List<Ressource> assignedResources = assignedResourceIds.stream()
-                .map(resourceId -> {
-                    try {
-                        return ressourceDao.getRessourceById(resourceId);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);  // Handle properly
-                    }
-                })
-                .collect(Collectors.toList());
-
-        request.setAttribute("assignedResources", assignedResources);
         request.setAttribute("ressourceTaches", ressourceTaches);
 
         request.getRequestDispatcher("/views/tache/updateTache.jsp").forward(request, response);
@@ -158,17 +141,7 @@ public class TacheServlet extends HttpServlet {
         String statut = request.getParameter("statut");
         String projetIdStr = request.getParameter("projetId");
 
-        // Input validation.
-        if (description == null || description.trim().isEmpty() ||
-                dateDebutStr == null || dateDebutStr.trim().isEmpty() ||
-                dateFinStr == null || dateFinStr.trim().isEmpty() ||
-                statut == null || statut.trim().isEmpty() ||
-                projetIdStr == null || projetIdStr.trim().isEmpty()) {
 
-            request.setAttribute("error", "All fields are required.");
-            showAddForm(request, response);
-            return;
-        }
 
         Date dateDebut = null;
         Date dateFin = null;
@@ -183,7 +156,6 @@ public class TacheServlet extends HttpServlet {
             showAddForm(request, response);
             return;
         }
-        // Create a new Tache object
         Tache tache = new Tache();
         tache.setDescription(description);
         tache.setDateDebut(dateDebut);
@@ -192,7 +164,7 @@ public class TacheServlet extends HttpServlet {
         tache.setProjetId(projetId);
 
         tacheDao.addTache(tache);
-       // response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId);
+        // response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId);
         response.sendRedirect(request.getContextPath() + "/taches");
     }
     private void updateTache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
@@ -201,20 +173,8 @@ public class TacheServlet extends HttpServlet {
         String dateDebutStr = request.getParameter("dateDebut");
         String dateFinStr = request.getParameter("dateFin");
         String statut = request.getParameter("statut");
-        String projetIdStr = request.getParameter("projetId"); // Allow changing the project
+        String projetIdStr = request.getParameter("projetId");
 
-        // Input Validation
-        if (description == null || description.trim().isEmpty() ||
-                dateDebutStr == null || dateDebutStr.trim().isEmpty() ||
-                dateFinStr == null || dateFinStr.trim().isEmpty() ||
-                statut == null || statut.trim().isEmpty() ||
-                projetIdStr == null || projetIdStr.trim().isEmpty()) {
-
-            request.setAttribute("error", "All fields are required.");
-            request.setAttribute("tache", tacheDao.getTacheById(id)); // Get existing data
-            showEditForm(request, response);
-            return;
-        }
 
         Date dateDebut = null;
         Date dateFin = null;
@@ -231,13 +191,11 @@ public class TacheServlet extends HttpServlet {
             return;
         }
 
-        // Get existing tache
         Tache tache = tacheDao.getTacheById(id);
         if (tache == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Tache with given ID not found");
             return;
         }
-        // Update Tache object.
         tache.setDescription(description);
         tache.setDateDebut(dateDebut);
         tache.setDateFin(dateFin);
@@ -245,92 +203,71 @@ public class TacheServlet extends HttpServlet {
         tache.setProjetId(projetId);
 
         tacheDao.updateTache(tache);
-        response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId); // Redirect to the task list for the project
+        //response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId);
+        response.sendRedirect(request.getContextPath() + "/taches");
     }
 
     private void deleteTache(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Tache tache = tacheDao.getTacheById(id);  // Fetch to get projetId
-        if (tache == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Tache not found.");
-            return;
-        }
+        Tache tache = tacheDao.getTacheById(id);
         int projetId = tache.getProjetId();
         tacheDao.deleteTache(id);
-        response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId); // Redirect back to the project's tasks
+        response.sendRedirect(request.getContextPath() + "/taches?projetId=" + projetId);
     }
 
     private void showAssignerRessourceForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int tacheId = Integer.parseInt(request.getParameter("tacheId"));
         Tache tache = tacheDao.getTacheById(tacheId);
 
-        if (tache == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Tache not found");
-            return;
+        List<Ressource> ressources = ressourceDao.getAllRessources();
+        List<RessourceTache> ressourceTaches = ressourceTacheDao.getAllRessourceTachesByTacheId(tacheId);
+
+        List<Integer> assignedResourceIds = new ArrayList<>();
+        for (RessourceTache rt : ressourceTaches) {
+            assignedResourceIds.add(rt.getRessourceId());
         }
 
-        // Get all available resources.
-        List<Ressource> ressources = ressourceDao.getAllRessources();
+        List<Ressource> availableResources = new ArrayList<>();
+        for (Ressource ressource : ressources) {
+            if (!assignedResourceIds.contains(ressource.getId())) {
+                availableResources.add(ressource);
+            }
+        }
 
-        // Get already assigned resources to avoid duplicates in dropdown.
-        List<RessourceTache> ressourceTaches = ressourceTacheDao.getAllRessourceTachesByTacheId(tacheId);
-        List<Integer> assignedResourceIds = ressourceTaches.stream()
-                .map(RessourceTache::getRessourceId)
-                .collect(Collectors.toList());
-
-        // Filter out already assigned resources
-        List<Ressource> availableResources = ressources.stream()
-                .filter(ressource -> !assignedResourceIds.contains(ressource.getId()))
-                .collect(Collectors.toList());
-
-
-        request.setAttribute("tache", tache);  // Pass the tache
-        request.setAttribute("ressources", availableResources); // Pass available resources
+        request.setAttribute("tache", tache);
+        request.setAttribute("ressources", availableResources);
         request.getRequestDispatcher("/views/tache/assignerRessource.jsp").forward(request, response);
     }
+
     private void assignerRessource(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int tacheId = Integer.parseInt(request.getParameter("tacheId"));
         int ressourceId = Integer.parseInt(request.getParameter("ressourceId"));
         String quantiteUtiliseeStr = request.getParameter("quantiteUtilisee");
 
-        // Input validation
         if (quantiteUtiliseeStr == null || quantiteUtiliseeStr.trim().isEmpty()) {
             request.setAttribute("error", "Quantity is required.");
             showAssignerRessourceForm(request, response);
             return;
         }
 
-
-        int quantiteUtilisee = 0;
-        try{
+        int quantiteUtilisee;
+        try {
             quantiteUtilisee = Integer.parseInt(quantiteUtiliseeStr);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid quantity format.");
             showAssignerRessourceForm(request, response);
             return;
         }
 
-        //Check if the ressource exist and available
         Ressource ressource = ressourceDao.getRessourceById(ressourceId);
-        if (ressource == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found.");
-            return;
-        }
-        if(ressource.getQuantite() < quantiteUtilisee){
+
+
+        if (ressource.getQuantite() < quantiteUtilisee) {
             request.setAttribute("error", "Not enough resources available.");
             showAssignerRessourceForm(request, response);
             return;
         }
 
-        // Check for existing assignment (prevent duplicates).
-        List<RessourceTache> existingAssignments = ressourceTacheDao.getAllRessourceTachesByTacheId(tacheId);
-        for(RessourceTache rt : existingAssignments){
-            if(rt.getRessourceId() == ressourceId){
-                request.setAttribute("error", "This resource is already assigned to this task.");
-                showAssignerRessourceForm(request, response);
-                return;
-            }
-        }
 
         RessourceTache ressourceTache = new RessourceTache();
         ressourceTache.setTacheId(tacheId);
@@ -339,17 +276,15 @@ public class TacheServlet extends HttpServlet {
 
         ressourceTacheDao.addRessourceTache(ressourceTache);
 
-        // Update the remaining quantity of the resource.
         int newQuantity = ressource.getQuantite() - quantiteUtilisee;
         ressourceDao.updateRessourceQuantity(ressourceId, newQuantity);
 
-        response.sendRedirect(request.getContextPath() + "/taches/edit?id=" + tacheId); // Redirect to the edit page of the task
+        response.sendRedirect(request.getContextPath() + "/taches/edit?id=" + tacheId);
     }
     private void supprimerRessource(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int tacheId = Integer.parseInt(request.getParameter("tacheId"));
         int ressourceId = Integer.parseInt(request.getParameter("ressourceId"));
 
-        // Retrieve the RessourceTache to get the quantity used
         List<RessourceTache> ressourceTaches = ressourceTacheDao.getAllRessourceTachesByTacheId(tacheId);
         RessourceTache ressourceTacheToDelete = null;
         for (RessourceTache rt : ressourceTaches) {
@@ -364,10 +299,9 @@ public class TacheServlet extends HttpServlet {
             return;
         }
 
-        // Delete the association
         ressourceTacheDao.deleteRessourceTache(tacheId, ressourceId);
 
-        // Add the used quantity back to the resource
+        // Add the used quantity back to the resource quantity in the database
         Ressource ressource = ressourceDao.getRessourceById(ressourceId);
         if (ressource != null) {
             int updatedQuantity = ressource.getQuantite() + ressourceTacheToDelete.getQuantiteUtilisee();
@@ -376,5 +310,34 @@ public class TacheServlet extends HttpServlet {
 
         response.sendRedirect(request.getContextPath() + "/taches/edit?id=" + tacheId);
     }
+
+    private void viewAssignedResources(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        int tacheId = Integer.parseInt(request.getParameter("id"));
+        Tache tache = tacheDao.getTacheById(tacheId);
+
+        if (tache == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Tache not found");
+            return;
+        }
+
+        List<RessourceTache> ressourceTaches = ressourceTacheDao.getAllRessourceTachesByTacheId(tacheId);
+        List<Ressource> assignedResources = new ArrayList<>();
+
+        for (RessourceTache ressourceTache : ressourceTaches) {
+            try {
+                Ressource ressource = ressourceDao.getRessourceById(ressourceTache.getRessourceId());
+                assignedResources.add(ressource);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        request.getSession().setAttribute("tache", tache);
+        request.getSession().setAttribute("assignedResources", assignedResources);
+        request.getSession().setAttribute("ressourceTaches", ressourceTaches);
+
+        response.sendRedirect(request.getContextPath() + "/views/tache/viewAssignedResources.jsp");
+    }
+
 
 }

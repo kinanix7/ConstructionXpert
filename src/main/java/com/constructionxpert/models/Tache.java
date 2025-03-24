@@ -13,7 +13,6 @@ public class Tache {
     private Timestamp dateCreation;
 
 
-    // Constructors, Getters, and Setters
     public Tache() {
     }
 

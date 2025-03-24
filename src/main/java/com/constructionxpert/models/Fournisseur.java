@@ -11,7 +11,6 @@ public class Fournisseur {
     private String adresse;
     private Timestamp dateCreation;
 
-    // Constructors
     public Fournisseur() {}
 
     public Fournisseur(int id, String nom, String contact, String email, String telephone, String adresse, Timestamp dateCreation) {
@@ -24,7 +23,6 @@ public class Fournisseur {
         this.dateCreation = dateCreation;
     }
 
-    // Getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getNom() { return nom; }

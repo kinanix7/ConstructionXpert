@@ -14,7 +14,6 @@ public class Projet {
     private int administrateurId;
     private Timestamp dateCreation;
 
-    // Constructors, Getters, and Setters (as before)
 
     public Projet() {
     }

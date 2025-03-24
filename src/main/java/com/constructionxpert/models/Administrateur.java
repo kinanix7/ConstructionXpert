@@ -9,7 +9,6 @@ public class Administrateur {
     private String email;
     private Timestamp dateCreation;
 
-    // Constructors
     public Administrateur() {}
 
     public Administrateur(int id, String nomUtilisateur, String motDePasse, String email, Timestamp dateCreation) {
@@ -20,7 +19,6 @@ public class Administrateur {
         this.dateCreation = dateCreation;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getNomUtilisateur() { return nomUtilisateur; }

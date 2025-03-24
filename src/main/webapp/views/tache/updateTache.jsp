@@ -64,41 +64,41 @@
         <button type="submit" class="btn btn-primary">Update Tache</button>
         <a href="<%= request.getContextPath() %>/taches" class="btn btn-secondary">Cancel</a>
     </form>
-    <!-- Display Assigned Resources -->
-    <h3>Assigned Resources</h3>
-    <% List<Ressource> assignedResources = (List<Ressource>) request.getAttribute("assignedResources");
-        List<RessourceTache> ressourceTaches = (List<RessourceTache>)request.getAttribute("ressourceTaches");
-        if (assignedResources != null && !assignedResources.isEmpty()) { %>
+<%--    <!-- Display Assigned Resources -->--%>
+<%--    <h3>Assigned Resources</h3>--%>
+<%--    <% List<Ressource> assignedResources = (List<Ressource>) request.getAttribute("assignedResources");--%>
+<%--        List<RessourceTache> ressourceTaches = (List<RessourceTache>)request.getAttribute("ressourceTaches");--%>
+<%--        if (assignedResources != null && !assignedResources.isEmpty()) { %>--%>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Resource Name</th>
-            <th>Quantity Used</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <%
-            for (int i = 0; i < assignedResources.size(); i++) {
-                Ressource ressource = assignedResources.get(i);
-                RessourceTache ressourceTache = ressourceTaches.get(i);
-        %>
-        <tr>
-            <td><%= ressource.getNom() %></td>
-            <td><%= ressourceTache.getQuantiteUtilisee() %></td>
-            <td>
-                <a href="<%=request.getContextPath()%>/taches/supprimerRessource?tacheId=<%= tache.getId() %>&ressourceId=<%= ressource.getId() %>"
-                   class="btn btn-danger btn-sm">Remove</a>
-            </td>
-        </tr>
+<%--    <table class="table">--%>
+<%--        <thead>--%>
+<%--        <tr>--%>
+<%--            <th>Resource Name</th>--%>
+<%--            <th>Quantity Used</th>--%>
+<%--            <th>Action</th>--%>
+<%--        </tr>--%>
+<%--        </thead>--%>
+<%--        <tbody>--%>
+<%--        <%--%>
+<%--            for (int i = 0; i < assignedResources.size(); i++) {--%>
+<%--                Ressource ressource = assignedResources.get(i);--%>
+<%--                RessourceTache ressourceTache = ressourceTaches.get(i);--%>
+<%--        %>--%>
+<%--        <tr>--%>
+<%--            <td><%= ressource.getNom() %></td>--%>
+<%--            <td><%= ressourceTache.getQuantiteUtilisee() %></td>--%>
+<%--            <td>--%>
+<%--                <a href="<%=request.getContextPath()%>/taches/supprimerRessource?tacheId=<%= tache.getId() %>&ressourceId=<%= ressource.getId() %>"--%>
+<%--                   class="btn btn-danger btn-sm">Remove</a>--%>
+<%--            </td>--%>
+<%--        </tr>--%>
 
-        <% } %>
-        </tbody>
-    </table>
-    <% } else { %>
-    <p>No resources assigned to this task.</p>
-    <% } %>
+<%--        <% } %>--%>
+<%--        </tbody>--%>
+<%--    </table>--%>
+<%--    <% } else { %>--%>
+<%--    <p>No resources assigned to this task.</p>--%>
+<%--    <% } %>--%>
 </div>
 <%@ include file="../includes/footer.jsp" %>
 </body>

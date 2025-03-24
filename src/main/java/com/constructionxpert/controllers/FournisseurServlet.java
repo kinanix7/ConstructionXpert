@@ -97,7 +97,6 @@ public class FournisseurServlet extends HttpServlet {
         String telephone = request.getParameter("telephone");
         String adresse = request.getParameter("adresse");
 
-        // Create a new Fournisseur object
         Fournisseur fournisseur = new Fournisseur();
         fournisseur.setNom(nom);
         fournisseur.setContact(contact);
@@ -106,11 +105,11 @@ public class FournisseurServlet extends HttpServlet {
         fournisseur.setAdresse(adresse);
 
         fournisseurDao.addFournisseur(fournisseur);
-        response.sendRedirect(request.getContextPath() + "/fournisseurs"); // Redirect to the list
+        response.sendRedirect(request.getContextPath() + "/fournisseurs");
     }
 
     private void updateFournisseur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-        int id = Integer.parseInt(request.getParameter("id"));  // Get ID from the form
+        int id = Integer.parseInt(request.getParameter("id"));
         String nom = request.getParameter("nom");
         String contact = request.getParameter("contact");
         String email = request.getParameter("email");
@@ -118,7 +117,6 @@ public class FournisseurServlet extends HttpServlet {
         String adresse = request.getParameter("adresse");
 
 
-        // Retrieve the existing Fournisseur
         Fournisseur fournisseur = fournisseurDao.getFournisseurById(id);
         if(fournisseur == null){
             //Handle not found scenario
@@ -133,7 +131,7 @@ public class FournisseurServlet extends HttpServlet {
         fournisseur.setAdresse(adresse);
 
         fournisseurDao.updateFournisseur(fournisseur);
-        response.sendRedirect(request.getContextPath() + "/fournisseurs"); // Redirect to the list
+        response.sendRedirect(request.getContextPath() + "/fournisseurs");
     }
     private void deleteFournisseur(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));

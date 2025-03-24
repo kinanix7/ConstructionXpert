@@ -35,7 +35,7 @@ public class FournisseurDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 
@@ -60,7 +60,7 @@ public class FournisseurDao {
                 fournisseurs.add(fournisseur);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
         return fournisseurs;
     }
@@ -87,7 +87,7 @@ public class FournisseurDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
         return fournisseur;
     }
@@ -107,7 +107,7 @@ public class FournisseurDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
 
@@ -120,8 +120,7 @@ public class FournisseurDao {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Log this properly
+            e.printStackTrace();
         }
     }
-    // ... other CRUD methods ...
 }
