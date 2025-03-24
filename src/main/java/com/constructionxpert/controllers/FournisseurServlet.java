@@ -79,7 +79,7 @@ public class FournisseurServlet extends HttpServlet {
     }
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Fournisseur fournisseur = fournisseurDao.getFournisseurById(id); // Fetch the existing fournisseur
+        Fournisseur fournisseur = fournisseurDao.getFournisseurById(id);
 
         if (fournisseur == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Fournisseur not found");
@@ -97,14 +97,6 @@ public class FournisseurServlet extends HttpServlet {
         String telephone = request.getParameter("telephone");
         String adresse = request.getParameter("adresse");
 
-        // Basic Input Validation
-        if (nom == null || nom.trim().isEmpty() ||
-                email == null || email.trim().isEmpty()) {
-
-            request.setAttribute("error", "Nom and Email are required fields.");
-            request.getRequestDispatcher("/views/fournisseur/addFournisseur.jsp").forward(request, response);
-            return; // Important: Stop further processing
-        }
         // Create a new Fournisseur object
         Fournisseur fournisseur = new Fournisseur();
         fournisseur.setNom(nom);
@@ -113,7 +105,6 @@ public class FournisseurServlet extends HttpServlet {
         fournisseur.setTelephone(telephone);
         fournisseur.setAdresse(adresse);
 
-        // Add the fournisseur to the database
         fournisseurDao.addFournisseur(fournisseur);
         response.sendRedirect(request.getContextPath() + "/fournisseurs"); // Redirect to the list
     }
@@ -126,16 +117,6 @@ public class FournisseurServlet extends HttpServlet {
         String telephone = request.getParameter("telephone");
         String adresse = request.getParameter("adresse");
 
-        // Basic Input Validation
-        if (nom == null || nom.trim().isEmpty() ||
-                email == null || email.trim().isEmpty()) {
-
-            request.setAttribute("error", "Nom and Email are required fields.");
-            // You might want to re-display the edit form with the error message
-            request.setAttribute("fournisseur", fournisseurDao.getFournisseurById(id)); // Get existing data
-            request.getRequestDispatcher("/views/fournisseur/updateFournisseur.jsp").forward(request, response);
-            return;
-        }
 
         // Retrieve the existing Fournisseur
         Fournisseur fournisseur = fournisseurDao.getFournisseurById(id);
@@ -145,15 +126,12 @@ public class FournisseurServlet extends HttpServlet {
             return;
         }
 
-        // Update the Fournisseur object
-
         fournisseur.setNom(nom);
         fournisseur.setContact(contact);
         fournisseur.setEmail(email);
         fournisseur.setTelephone(telephone);
         fournisseur.setAdresse(adresse);
 
-        // Update the fournisseur in the database
         fournisseurDao.updateFournisseur(fournisseur);
         response.sendRedirect(request.getContextPath() + "/fournisseurs"); // Redirect to the list
     }

@@ -77,7 +77,6 @@ public class ProjetServlet extends HttpServlet {
     }
 
     private void showAddForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // No need to pass administrateurs here; the logged-in admin is used.
         request.getRequestDispatcher("/views/projet/addProjet.jsp").forward(request, response);
     }
 
@@ -100,17 +99,6 @@ public class ProjetServlet extends HttpServlet {
         String budgetStr = request.getParameter("budget");
         String statut = request.getParameter("statut");
 
-        // Input validation (important!)
-        if (nom == null || nom.trim().isEmpty() ||
-                dateDebutStr == null || dateDebutStr.trim().isEmpty() ||
-                dateFinStr == null || dateFinStr.trim().isEmpty() ||
-                budgetStr == null || budgetStr.trim().isEmpty() ||
-                statut == null || statut.trim().isEmpty()) {
-
-            request.setAttribute("error", "All fields are required.");
-            showAddForm(request, response); // Re-display the form with an error
-            return;
-        }
 
         Date dateDebut = null;
         Date dateFin = null;
@@ -129,14 +117,12 @@ public class ProjetServlet extends HttpServlet {
         // Get the logged-in administrator's ID from the session
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("admin") == null) {
-            // Handle the case where there's no logged-in admin (shouldn't happen with the filter)
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         Administrateur admin = (Administrateur) session.getAttribute("admin");
         int adminId = admin.getId();
 
-        // Create a new Projet object
         Projet projet = new Projet();
         projet.setNom(nom);
         projet.setDescription(description);
@@ -145,8 +131,6 @@ public class ProjetServlet extends HttpServlet {
         projet.setBudget(budget);
         projet.setStatut(statut);
         projet.setAdministrateurId(adminId);  // Use the logged-in admin's ID
-
-        // Add the projet to the database
         projetDao.addProjet(projet);
         response.sendRedirect(request.getContextPath() + "/projets");
     }
@@ -160,18 +144,7 @@ public class ProjetServlet extends HttpServlet {
         String budgetStr = request.getParameter("budget");
         String statut = request.getParameter("statut");
 
-        // Input validation (as in addProjet, but for updating)
-        if (nom == null || nom.trim().isEmpty() ||
-                dateDebutStr == null || dateDebutStr.trim().isEmpty() ||
-                dateFinStr == null || dateFinStr.trim().isEmpty() ||
-                budgetStr == null || budgetStr.trim().isEmpty() ||
-                statut == null || statut.trim().isEmpty()) {
 
-            request.setAttribute("error", "All fields are required.");
-            request.setAttribute("projet", projetDao.getProjetById(id)); // Get existing data
-            showEditForm(request, response);  // Re-display form
-            return;
-        }
 
         Date dateDebut = null;
         Date dateFin = null;
@@ -195,14 +168,12 @@ public class ProjetServlet extends HttpServlet {
             return;
         }
 
-        // Update project object
         projet.setNom(nom);
         projet.setDescription(description);
         projet.setDateDebut(dateDebut);
         projet.setDateFin(dateFin);
         projet.setBudget(budget);
         projet.setStatut(statut);
-        // administrateurId should NOT be updated here.
 
         projetDao.updateProjet(projet);
         response.sendRedirect(request.getContextPath() + "/projets");

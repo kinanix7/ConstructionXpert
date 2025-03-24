@@ -128,6 +128,7 @@
             align-items: center;
             transition: all 0.2s ease;
             font-size: 14px;
+            cursor: pointer;
         }
 
         .btn-supprimer:hover {
@@ -259,6 +260,92 @@
         .add-button i {
             margin-right: 8px;
         }
+
+        /* Modal Styles */
+        .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            background-color: #f1f3f5;
+            border-bottom: 1px solid #e9ecef;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 12px 20px;
+        }
+
+        .modal-tools {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0;
+        }
+
+        .modal-body {
+            padding: 20px;
+            background-color: #F8FBFE;
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            color: var(--supprimer-color);
+            margin-bottom: 15px;
+        }
+
+        .modal-projet-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
+            font-size: 16px;
+            color: var(--light-color);
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding: 15px 20px;
+        }
+
+        .btn-annuler {
+            background-color: #6c757d;
+            color: white;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-annuler:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-confirmer {
+            background-color: var(--supprimer-color);
+            color: white;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-confirmer:hover {
+            background-color: #c9302c;
+        }
     </style>
 </head>
 <body>
@@ -322,11 +409,15 @@
                         <a href="<%=request.getContextPath()%>/projets/edit?id=<%= projet.getId() %>" class="btn-modifier">
                             Modifier
                         </a>
-                        <a href="<%=request.getContextPath()%>/projets/delete?id=<%= projet.getId() %>" class="btn-supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce projet?')">
+                        <a href="javascript:void(0);" class="btn-supprimer"
+                           data-toggle="modal"
+                           data-target="#deleteModal"
+                           data-id="<%= projet.getId() %>"
+                           data-nom="<%= projet.getNom() %>">
                            Supprimer
                         </a>
                         <a href="<%=request.getContextPath()%>/taches?projetId=<%= projet.getId() %>" class="btn-tasks">
-                             Voir Tâches
+                    Voir Tâches
                         </a>
                     </div>
                 </div>
@@ -338,6 +429,48 @@
             <div class="alert alert-info">Aucun projet trouvé.</div>
         </div>
         <% } %>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-tools">
+                    <div class="circle">
+                        <span class="red box"></span>
+                    </div>
+                    <div class="circle">
+                        <span class="yellow box"></span>
+                    </div>
+                    <div class="circle">
+                        <span class="green box"></span>
+                    </div>
+                </div>
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h4 class="modal-projet-name" id="projetName"></h4>
+                <p class="modal-message">
+                    Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-annuler" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+                <a href="#" id="confirmDelete" class="btn-confirmer">
+                    <i class="fas fa-trash-alt"></i> Confirmer la suppression
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -370,5 +503,20 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // When delete modal is about to be shown
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var projetId = button.data('id'); // Extract project ID
+            var projetNom = button.data('nom'); // Extract project name
+
+            var modal = $(this);
+            // Update the modal's content
+            modal.find('#projetName').text(projetNom);
+            modal.find('#confirmDelete').attr('href', '<%=request.getContextPath()%>/projets/delete?id=' + projetId);
+        });
+    });
+</script>
 </body>
 </html>

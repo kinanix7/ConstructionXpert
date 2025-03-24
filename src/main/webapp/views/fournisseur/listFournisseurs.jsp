@@ -260,10 +260,10 @@
                 <div class="card-footer">
                     <div class="action-buttons">
                         <a href="<%=request.getContextPath()%>/fournisseurs/edit?id=<%= fournisseur.getId() %>" class="btn-modifier">
-                            Edit
+                           Edit
                         </a>
-                        <a href="<%=request.getContextPath()%>/fournisseurs/delete?id=<%= fournisseur.getId() %>" class="btn-supprimer" onclick="return confirm('Are you sure?')">
-                            Delete
+                        <a href="<%=request.getContextPath()%>/fournisseurs/delete?id=<%= fournisseur.getId() %>" class="btn-supprimer" onclick="return confirm('Are you sure you want to delete this supplier?')">
+                      Delete
                         </a>
                     </div>
                 </div>
