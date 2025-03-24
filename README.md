@@ -39,7 +39,7 @@ ConstructionXpert Services est une application web de gestion de projets de cons
 - <img src="uml/2.png" alt="Class Diagram" width="500">
 
 - **Diagramme de Séquence**
-<img src="uml/3.png" alt="Class Diagram" width="500">
+-<img src="uml/3.png" alt="Class Diagram" width="500">
 
 ## Technologies et Outils Utilisés 🚀🚧✨
 - **Langage de Programmation** : Java
